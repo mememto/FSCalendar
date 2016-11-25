@@ -174,11 +174,7 @@
             break;
         }
     }
-    if (item < 0) {
-        return nil;
-    }
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
-    return indexPath;
+    return [NSIndexPath indexPathForItem:item inSection:section];
 }
 
 - (NSIndexPath *)indexPathForDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)position

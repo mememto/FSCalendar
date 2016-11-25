@@ -1,5 +1,5 @@
 //
-//  FSCalendarDelegateProxy.m
+//  FSCalendarProxy.m
 //  FSCalendar
 //
 //  Created by dingwenchao on 10/27/16.
@@ -144,22 +144,16 @@
 
 #pragma mark - Delegate requests
 
-- (BOOL)shouldSelectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)position
+- (BOOL)shouldSelectDate:(NSDate *)date
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:shouldSelectDate:atMonthPosition:)]) {
-        return [self.delegate calendar:self.calendar shouldSelectDate:date atMonthPosition:position];
-    }
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    else if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:shouldSelectDate:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:shouldSelectDate:)]) {
         return [self.delegate calendar:self.calendar shouldSelectDate:date];
     }
-#pragma GCC diagnostic pop
     return YES;
 }
 
 
-- (void)didSelectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)position
+- (void)didSelectDate:(NSDate *)date
 {
     NSMutableArray<NSDate *> *selectedDates = [self.calendar fs_variableForKey:@"_selectedDates"];
     if (!self.calendar.allowsMultipleSelection) {
@@ -168,42 +162,24 @@
     if (![selectedDates containsObject:date]) {
         [selectedDates addObject:date];
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:didSelectDate:atMonthPosition:)]) {
-        [self.delegate calendar:self.calendar didSelectDate:date atMonthPosition:position];
-    }
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    else if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:didSelectDate:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:didSelectDate:)]) {
         [self.delegate calendar:self.calendar didSelectDate:date];
     }
-#pragma GCC diagnostic pop
 }
 
-- (BOOL)shouldDeselectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)position
+- (BOOL)shouldDeselectDate:(NSDate *)date
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:shouldDeselectDate:atMonthPosition:)]) {
-        return [self.delegate calendar:self.calendar shouldDeselectDate:date atMonthPosition:position];
-    }
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    else if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:shouldDeselectDate:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:shouldDeselectDate:)]) {
         return [self.delegate calendar:self.calendar shouldDeselectDate:date];
     }
-#pragma GCC diagnostic pop
     return YES;
 }
 
-- (void)didDeselectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)position
+- (void)didDeselectDate:(NSDate *)date
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:didDeselectDate:atMonthPosition:)]) {
-        [self.delegate calendar:self.calendar didDeselectDate:date atMonthPosition:position];
-    }
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    else if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:didDeselectDate:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendar:didDeselectDate:)]) {
         [self.delegate calendar:self.calendar didDeselectDate:date];
     }
-#pragma GCC diagnostic pop
 }
 
 - (void)currentPageDidChange
@@ -419,8 +395,16 @@
 
 #pragma mark - Private methods
 
-- (id<FSCalendarDelegate>)delegate { return self.calendar.delegate; }
-- (id<FSCalendarDataSource>)dataSource { return self.calendar.dataSource; }
+- (id<FSCalendarDelegate>)delegate
+{
+    return self.calendar.delegate;
+}
+
+- (id<FSCalendarDataSource>)dataSource
+{
+    return self.calendar.dataSource;
+}
+
 - (id<FSCalendarDelegateAppearance>)delegateAppearance
 {
     if (self.delegate && [self.delegate conformsToProtocol:@protocol(FSCalendarDelegateAppearance)]) {

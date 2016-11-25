@@ -30,6 +30,7 @@
 @property (readonly, nonatomic) FSCalendarAnimator *animator;
 @property (readonly, nonatomic) FSCalendarCalculator *calculator;
 @property (readonly, nonatomic) FSCalendarDelegateProxy *proxy;
+@property (readonly, nonatomic) NSArray<UILabel *> *weekdays;
 @property (readonly, nonatomic) BOOL floatingMode;
 @property (readonly, nonatomic) NSArray *visibleStickyHeaders;
 @property (readonly, nonatomic) CGFloat preferredHeaderHeight;

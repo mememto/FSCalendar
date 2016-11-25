@@ -43,13 +43,14 @@
     [self addSubview:contentView];
     _contentView = contentView;
     
-    _weekdayLabels = [NSHashTable weakObjectsHashTable];
+    NSMutableArray<UILabel *> *weekdayLabels = [NSMutableArray arrayWithCapacity:7];
     for (int i = 0; i < 7; i++) {
         UILabel *weekdayLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         weekdayLabel.textAlignment = NSTextAlignmentCenter;
+        [weekdayLabels addObject:weekdayLabel];
         [self.contentView addSubview:weekdayLabel];
-        [_weekdayLabels addObject:weekdayLabel];
     }
+    _weekdayLabels = weekdayLabels.copy;
 }
 
 - (void)layoutSubviews
@@ -59,7 +60,7 @@
     self.contentView.frame = self.bounds;
     
     CGFloat weekdayWidth = self.fs_width/self.weekdayLabels.count;
-    [self.weekdayLabels.allObjects enumerateObjectsUsingBlock:^(UILabel *weekdayLabel, NSUInteger index, BOOL *stop) {
+    [self.weekdayLabels enumerateObjectsUsingBlock:^(UILabel *weekdayLabel, NSUInteger index, BOOL *stop) {
         weekdayLabel.frame = CGRectMake(index*weekdayWidth, 0, weekdayWidth, self.contentView.fs_height);
     }];
     
@@ -70,7 +71,7 @@
     BOOL useVeryShortWeekdaySymbols = (self.calendar.appearance.caseOptions & (15<<4) ) == FSCalendarCaseOptionsWeekdayUsesSingleUpperCase;
     NSArray *weekdaySymbols = useVeryShortWeekdaySymbols ? self.calendar.gregorian.veryShortStandaloneWeekdaySymbols : self.calendar.gregorian.shortStandaloneWeekdaySymbols;
     BOOL useDefaultWeekdayCase = (self.calendar.appearance.caseOptions & (15<<4) ) == FSCalendarCaseOptionsWeekdayUsesDefaultCase;
-    [self.weekdayLabels.allObjects enumerateObjectsUsingBlock:^(UILabel *label, NSUInteger index, BOOL *stop) {
+    [self.weekdayLabels enumerateObjectsUsingBlock:^(UILabel *label, NSUInteger index, BOOL *stop) {
         index += self.calendar.firstWeekday-1;
         index %= 7;
         label.text = useDefaultWeekdayCase ? weekdaySymbols[index] : [weekdaySymbols[index] uppercaseString];

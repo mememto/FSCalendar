@@ -48,9 +48,8 @@ typedef NS_ENUM(NSUInteger, FSCalendarPlaceholderType) {
 typedef NS_ENUM(NSUInteger, FSCalendarMonthPosition) {
     FSCalendarMonthPositionPrevious,
     FSCalendarMonthPositionCurrent,
-    FSCalendarMonthPositionNext,
-    
-    FSCalendarMonthPositionOutOfBounds = NSNotFound-1,
+    FSCalendarMonthPositionNext,               
+    FSCalendarMonthPositionOutOfBounds,
     FSCalendarMonthPositionNotFound = NSNotFound
 };
 
@@ -123,26 +122,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Asks the delegate whether the specific date is allowed to be selected by tapping.
  */
-- (BOOL)calendar:(FSCalendar *)calendar shouldSelectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)monthPosition;
-- (BOOL)calendar:(FSCalendar *)calendar shouldSelectDate:(NSDate *)date FSCalendarDeprecated(-calendar:shouldSelectDate:atMonthPosition:);
+- (BOOL)calendar:(FSCalendar *)calendar shouldSelectDate:(NSDate *)date;
 
 /**
  Tells the delegate a date in the calendar is selected by tapping.
  */
-- (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)monthPosition;
-- (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date FSCalendarDeprecated(-calendar:didSelectDate:atMonthPosition:);
+- (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date;
 
 /**
  Asks the delegate whether the specific date is allowed to be deselected by tapping.
  */
-- (BOOL)calendar:(FSCalendar *)calendar shouldDeselectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)monthPosition;
-- (BOOL)calendar:(FSCalendar *)calendar shouldDeselectDate:(NSDate *)date FSCalendarDeprecated(-calendar:shouldDeselectDate:atMonthPosition:);
+- (BOOL)calendar:(FSCalendar *)calendar shouldDeselectDate:(NSDate *)date;
 
 /**
  Tells the delegate a date in the calendar is deselected by tapping.
  */
-- (void)calendar:(FSCalendar *)calendar didDeselectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)monthPosition;
-- (void)calendar:(FSCalendar *)calendar didDeselectDate:(NSDate *)date FSCalendarDeprecated(-calendar:didDeselectDate:atMonthPosition:);
+- (void)calendar:(FSCalendar *)calendar didDeselectDate:(NSDate *)date;
 
 /**
  Tells the delegate the calendar is about to change the bounding rect.
@@ -152,7 +147,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Tells the delegate that the specified cell is about to be displayed in the calendar.
  */
-- (void)calendar:(FSCalendar *)calendar willDisplayCell:(FSCalendarCell *)cell forDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)monthPosition;
+- (void)calendar:(FSCalendar *)calendar willDisplayCell:(FSCalendarCell *)cell forDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)position;
 
 /**
  Tells the delegate the calendar is about to change the current page.
@@ -315,7 +310,7 @@ IB_DESIGNABLE
 @property (assign, nonatomic) FSCalendarScope scope;
 
 /**
- * A UIPanGestureRecognizer instance which enables the control of scope on the whole day-area. Not available if the scrollDirection is vertical.
+ * A UIPanGestureRecognizer instance which enables the control of scope on the whole day-area. Not available if the scrollDirection is vertical
  *
  * e.g.
  *
@@ -324,16 +319,7 @@ IB_DESIGNABLE
 @property (readonly, nonatomic) UIPanGestureRecognizer *scopeGesture;
 
 /**
- * A UILongPressGestureRecognizer instance which enables the swipe-to-choose feature of the calendar.
- *
- * e.g.
- *
- *    calendar.swipeToChooseGesture.enabled = YES;
- */
-@property (readonly, nonatomic) UILongPressGestureRecognizer *swipeToChooseGesture;
-
-/**
- * The placeholder type of FSCalendar. Default is FSCalendarPlaceholderTypeFillSixRows.
+ * The placeholder type of FSCalendar. Default is FSCalendarPlaceholderTypeFillSixRows;
  *
  * e.g. To hide all placeholder of the calendar
  *
@@ -389,6 +375,11 @@ IB_DESIGNABLE
  A Boolean value that determines whether scrolling is enabled for the calendar.
  */
 @property (assign, nonatomic) IBInspectable BOOL scrollEnabled;
+
+/**
+ A Boolean value that determines whether scoping animation is centered a visible selected date. Default is YES.
+ */
+@property (assign, nonatomic) IBInspectable BOOL focusOnSingleSelectedDate;
 
 /**
  A Boolean value that determines whether the calendar should show a handle for control the scope. Default is NO;
@@ -584,10 +575,19 @@ IB_DESIGNABLE
 
 @interface FSCalendar (Deprecated)
 @property (assign, nonatomic) IBInspectable BOOL showsPlaceholders FSCalendarDeprecated('placeholderType');
+@property (strong, nonatomic) NSDate *currentMonth FSCalendarDeprecated('currentPage');
+- (void)setSelectedDate:(NSDate *)selectedDate FSCalendarDeprecated(-selectDate:);
+- (void)setSelectedDate:(NSDate *)selectedDate animate:(BOOL)animate FSCalendarDeprecated(-selectDate:scrollToDate:);
+
 @property (strong, nonatomic) NSString *identifier DEPRECATED_MSG_ATTRIBUTE("Changing calendar identifier is NOT RECOMMENDED. ");
 
-// Use NSCalendar.
+// Use NSDateFormatter
+- (NSString *)stringFromDate:(NSDate *)date format:(NSString *)format FSCalendarDeprecated([NSDateFormatter stringFromDate:]);
+- (NSString *)stringFromDate:(NSDate *)date FSCalendarDeprecated([NSDateFormatter stringFromDate:]);
+- (NSDate *)dateFromString:(NSString *)string format:(NSString *)format FSCalendarDeprecated([NSDateFormatter dateFromString:]);
 - (NSDate *)dateWithYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day FSCalendarDeprecated([NSDateFormatter dateFromString:]);
+
+// Use NSCalendar.
 - (NSInteger)yearOfDate:(NSDate *)date FSCalendarDeprecated(NSCalendar component:fromDate:]);
 - (NSInteger)monthOfDate:(NSDate *)date FSCalendarDeprecated(NSCalendar component:fromDate:]);
 - (NSInteger)dayOfDate:(NSDate *)date FSCalendarDeprecated(NSCalendar component:fromDate:]);
