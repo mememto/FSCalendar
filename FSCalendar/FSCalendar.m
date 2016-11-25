@@ -326,9 +326,6 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         
         BOOL needsAdjustingBoundingRect = YES;
         
-        NSLog(@"hasValidateVisibleLayout %@",self.hasValidateVisibleLayout ? @"true" : @"false");
-        NSLog(@"scope %@", (self.scope == FSCalendarScopeMonth) ? @"true" : @"false");
-        
         if (_scopeHandle) {
             CGFloat scopeHandleHeight = self.animator.cachedMonthSize.height*0.08;
             _contentView.frame = CGRectMake(0, 0, self.fs_width, self.fs_height-scopeHandleHeight);
